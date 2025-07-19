@@ -1,5 +1,3 @@
-# uclad
-
 # 🧠 Unified Compiler - Language Agnostic Development Platform
 
 ## 🚀 Overview
