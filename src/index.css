@@ -1,0 +1,831 @@
+:root {
+  --vscode-bg: #0b0c10;
+  --vscode-sidebar-bg: rgba(12, 14, 22, 0.9);
+  --vscode-editor-bg: rgba(15, 17, 27, 0.95);
+  --vscode-terminal-bg: rgba(10, 12, 20, 0.95);
+  --vscode-statusbar-bg: rgba(5, 10, 20, 0.9);
+  --vscode-accent: #ff8800; /* Jarvis cyan glow */
+  --vscode-text: #e0f7fa;
+  --vscode-tab-active: rgba(25, 30, 40, 0.9);
+  --vscode-tab-inactive: rgba(20, 25, 35, 0.4);
+  --vscode-border: rgba(0, 249, 255, 0.3);
+}
+
+
+.settings-icon {
+  margin-top: auto;
+  padding: 10px 0;
+  border-top: 1px solid var(--vscode-border);
+}
+#settings {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  background-color: var(--vscode-sideBar-background);
+  border-left: 1px solid var(--vscode-border);
+}
+
+#settings.open {
+  width: 250px;
+}
+
+#themeSelect {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  border: 1px solid var(--vscode-border);
+  border-radius: 4px;
+}
+
+/* Default (light) */
+body[data-theme="light"] {
+  --vscode-editor-background: #ffffff;
+  --vscode-editor-foreground: #333;
+  --vscode-border: #ccc;
+  --vscode-sideBar-background: #f3f3f3;
+}
+
+/* Dark theme */
+body[data-theme="dark"] {
+  --vscode-editor-background: #1e1e1e;
+  --vscode-editor-foreground: #ccc;
+  --vscode-border: #444;
+  --vscode-sideBar-background: #252526;
+}
+
+/* Jarvis theme (Neon + transparent) */
+body[data-theme="jarvis"] {
+  --vscode-editor-background: rgba(15, 15, 30, 0.85);
+  --vscode-editor-foreground: #0ff;
+  --vscode-border: rgba(0, 255, 255, 0.4);
+  --vscode-sideBar-background: rgba(10, 10, 25, 0.8);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--vscode-bg);
+  color: var(--vscode-text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container-fluid {
+  height: 100vh;
+}
+
+/* Sidebar styling */
+.sidebar {
+  background-color: var(--vscode-sidebar-bg);
+  height: 100%;
+  border-right: 1px solid var(--vscode-border);
+  overflow-y: auto;
+  padding: 8px;
+  display: none;
+  width: 300px; /* Default width */
+  min-width: 200px;
+  max-width: 400px;
+  resize: horizontal;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.sidebar.active {
+  background-color: var(--vscode-sidebar-bg);
+  height: 100%;
+  border-right: 1px solid var(--vscode-border);
+  overflow-y: auto;
+  padding: 8px;
+  display: block;
+}
+
+/* Add resize handle */
+.sidebar.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.sidebar.active:hover::after {
+  background-color: rgba(127, 127, 127, 0.3);
+}
+
+/* WebKit resizer styling */
+.sidebar::-webkit-resizer {
+  background-color: var(--vscode-border);
+  border-radius: 2px;
+}
+
+.sidebar-header {
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 8px 12px;
+  color: #6f7679;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-sidebar {
+  background: transparent;
+  border: none;
+  color: var(--vscode-text);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 3px 6px;
+}
+
+.btn-sidebar:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.directory-path {
+  font-size: 12px;
+  color: #6f7679;
+  padding: 4px 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-explorer {
+  padding: 4px 0;
+  margin-top: 8px;
+}
+
+.file-explorer-item {
+  padding: 3px 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.file-explorer-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.folder-icon, .file-icon {
+  margin-right: 6px;
+  font-size: 14px;
+}
+.folder-wrapper {
+  user-select: none;
+  cursor: pointer;
+}
+
+.folder-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-family: Consolas, monospace;
+  font-size: 14px;
+}
+
+.folder-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folder-contents {
+  margin-left: 2px;
+  border-left: 1px dashed #8882;
+  transition: all 0.2s ease;
+}
+
+.folder-contents.hidden {
+  display: none;
+}
+
+.toggle-icon {
+  width: 14px;
+  text-align: center;
+  display: inline-block;
+}
+
+
+/* Toolbar and editor area */
+.activity-bar {
+  width: 60px;
+  background-color: var(--vscode-sidebar-bg);
+  border-right: 1px solid var(--vscode-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 8px;
+  font-size: smaller;
+}
+
+.activity-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #858585;
+}
+
+.activity-icon.active {
+  color: var(--vscode-text);
+  border-left: 2px solid var(--vscode-accent);
+}
+
+.activity-icon:hover {
+  color: var(--vscode-text);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+
+.toolbar {
+  display: flex;
+  padding: 4px 8px;
+  background-color: var(--vscode-bg);
+  border-bottom: 1px solid var(--vscode-border);
+}
+
+.btn-toolbar {
+  background-color: transparent;
+  border: none;
+  color: var(--vscode-text);
+  margin-right: 8px;
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-size: 13px;
+}
+
+.btn-toolbar:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-toolbar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--vscode-accent);
+  border-color: var(--vscode-accent);
+}
+
+.editor-tabs {
+  display: flex;
+  align-items: center;
+  background-color: var(--vscode-bg);
+  border-bottom: 1px solid var(--vscode-border);
+  height: 35px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+/* Individual tab styling */
+.editor-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 3px;
+  height: 100%;
+  padding: 0 12px;
+  background-color: var(--vscode-tab-inactive);
+  border-left: 1px solid var(--vscode-border);
+  border-right: 1px solid var(--vscode-border);
+  font-size: 13px;
+  color: var(--vscode-text);
+  cursor: pointer;
+  min-width: 120px;
+  max-width: 200px;
+  flex: 0 0 auto; /* Prevent shrinking */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Active tab styling */
+.editor-tab.active {
+  background-color: var(--vscode-tab-active);
+  border-top: 2px solid var(--vscode-accent);
+  font-weight: 500;
+  box-shadow: inset 0 -2px 0 0 var(--vscode-accent);
+}
+
+/* Inactive tab hover effect */
+.editor-tab:not(.active):hover {
+  background-color: #303030;
+}
+
+/* Close button styling inside a tab */
+.tab-close {
+  margin-left: 5px;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.tab-close:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  opacity: 1;
+}
+
+.tab-close svg {
+  width: 12px;
+  height: 12px;
+  fill: var(--vscode-text);
+  pointer-events: none;
+}
+/* Editor content area */
+.editor-content {
+  flex-grow: 1;
+  overflow: auto;
+  background-color: var(--vscode-bg);
+}
+
+.content-area {
+  padding: 16px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.empty-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  font-style: italic;
+}
+
+/* Scrollbar styling */
+.editor-tabs::-webkit-scrollbar {
+  height: 5px;
+}
+
+.editor-tabs::-webkit-scrollbar-track {
+  background: var(--vscode-bg);
+}
+
+.editor-tabs::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.editor-tabs::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+
+
+.editor-area {
+  display: flex;
+  flex-grow: 1;
+  background-color: var(--vscode-editor-bg);
+  position: relative;
+  overflow: hidden;
+  height: 0; /* Ensure it doesn't grow based on children */
+  min-height: 0;
+}
+
+
+.line-numbers {
+  background-color: var(--vscode-editor-bg);
+  color: #6b6b6b;
+  font-family: monospace;
+  padding: 8px 8px 8px 24px;
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+  user-select: none;
+}
+
+#editor {
+  position: relative;
+  flex-grow: 1;
+  background-color: var(--vscode-editor-bg);
+  color: var(--vscode-text);
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 8px;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  tab-size: 2;
+
+  /* Add these lines */
+  height: 100%;
+  overflow: auto;
+}
+.editor-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+/* Terminal area */
+.terminal {
+  height: 200px;
+  background-color: var(--vscode-terminal-bg);
+  border-top: 1px solid var(--vscode-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 13px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.terminal-output {
+  padding: 8px 12px;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--vscode-text);
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* Status bar */
+.status-bar {
+  display: flex;
+  background-color: var(--vscode-statusbar-bg);
+  color: rgb(0, 0, 0);
+  font-size: 12px;
+  height: 22px;
+  padding: 0 8px;
+  font-weight: 600;
+}
+
+.status-item {
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Modal dialog */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--vscode-sidebar-bg);
+  color: var(--vscode-text);
+  padding: 20px;
+  border-radius: 6px;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h3 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.modal-content p {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 8px 10px;
+  background-color: var(--vscode-bg);
+  border: 1px solid var(--vscode-border);
+  color: var(--vscode-text);
+  border-radius: 3px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.modal-content input:focus {
+  outline: 1px solid var(--vscode-accent);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-size: 13px;
+  cursor: pointer;
+  background-color: var(--vscode-bg);
+  color: var(--vscode-text);
+  border: 1px solid var(--vscode-border);
+}
+
+.modal-buttons button:last-child {
+  background-color: var(--vscode-accent);
+  border-color: var(--vscode-accent);
+  color: white;
+}
+
+.modal-buttons button:hover {
+  opacity: 0.9;
+}
+
+/* Add this to your index.css file */
+
+/* Search Input Styles */
+.search-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  background-color: #2d2d2d;
+  border: 1px solid #3c3c3c;
+  color: #e0e0e0;
+  border-radius: 4px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007acc;
+}
+
+/* Search Controls */
+.search-controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0 8px;
+}
+
+.search-btn {
+  background-color: #0e639c;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.search-btn:hover {
+  background-color: #1177bb;
+}
+
+.search-nav-btn {
+  background-color: #383838;
+  color: #e0e0e0;
+  border: none;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.search-nav-btn:hover:not(:disabled) {
+  background-color: #4a4a4a;
+}
+
+.search-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.results-count {
+  margin-left: auto;
+  color: #a0a0a0;
+  font-size: 12px;
+}
+
+/* Search Results */
+.search-results {
+  overflow-y: auto;
+  height: calc(100% - 90px);
+  
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+/* For Chrome, Edge, and Safari */
+.search-results::-webkit-scrollbar {
+  width: 10px; /* Set width for vertical scrollbar */
+  height: 10px; /* Set height for horizontal scrollbar if needed */
+}
+
+.search-results::-webkit-scrollbar-track {
+  background-color: transparent; /* Transparent background */
+  border-radius: 10px; /* Round corners */
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background-color: #888; /* Dark gray thumb */
+  border-radius: 10px; /* Round corners */
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker gray when hovered */
+}
+
+.search-results::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+.search-result-item {
+  padding: 8px;
+  border-bottom: 1px solid #383838;
+  cursor: pointer;
+}
+
+.search-result-item:hover {
+  background-color: #2a2d2e;
+}
+
+.search-result-item.active {
+  background-color: #04395e;
+}
+
+.result-filename {
+  color: #e0e0e0;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.result-preview {
+  color: #a0a0a0;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  font-family: monospace;
+}
+
+.search-match {
+  background-color: #875b00;
+  color: #ffffff;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.search-highlight {
+  background-color: rgba(234, 92, 0, 0.1);
+  border-left: 2px solid #ea5c00;
+}
+
+.search-info {
+  color: #a0a0a0;
+  padding: 8px;
+  font-style: italic;
+}
+
+.search-error {
+  color: #f14c4c;
+  padding: 8px;
+}
+
+/* Show active sidebar */
+.sidebar {
+  display: none;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+/* For Chrome, Edge, and Safari */
+.sidebar::-webkit-scrollbar {
+  width: 10px; /* Set width for vertical scrollbar */
+  height: 10px; /* Set height for horizontal scrollbar if needed */
+  border-radius: 20px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background-color: transparent; /* Transparent background */
+  border-radius: 20px; /* Round corners */
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #888; /* Dark gray thumb */
+  border-radius: 20px; /* Round corners */
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker gray when hovered */
+}
+.sidebar::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+/* Show active sidebar */
+
+.sidebar.active {
+  display: block;
+}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.chat-output {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 20px;
+}
+
+.chat-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#send-message {
+  align-self: flex-end;
+}
+
+.clickable-name {
+  color: #007acc;
+  cursor: pointer;
+}
+.clickable-name:hover {
+  text-decoration: underline;
+}
+
+/* Style the scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* Set width for vertical scrollbar */
+  height: 10px; /* Set height for horizontal scrollbar */
+}
+
+/* Style the track (the empty space behind the thumb) */
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0); /* Light gray background */
+  border-radius: 10px; /* Round corners */
+}
+
+/* Style the thumb (the draggable part of the scrollbar) */
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Dark gray thumb */
+  border-radius: 10px; /* Round corners */
+}
+
+/* Add hover effect on the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker gray when hovered */
+}
+
+/* Optional: Style the corner where the horizontal and vertical scrollbars meet */
+::-webkit-scrollbar-corner {
+  background-color: #f1f1f1;
+}
+#navbar {
+  -webkit-app-region: drag; /* Makes the navbar draggable */
+}
+
+#navbar .navbar-toggler,
+#navbar .nav-link,
+#navbar button {
+  -webkit-app-region: no-drag; /* Prevents dragging on interactive elements */
+}
+nav{
+  background: rgba(0, 17, 255, 0.096);backdrop-filter: blur(10px); box-shadow: 0 15px 32px rgba(0, 0, 0, 0.3);
+}
